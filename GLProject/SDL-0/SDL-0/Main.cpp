@@ -36,8 +36,8 @@ int main(int argc, char* argv[])
 
 	///////////SETTING UP SDL/////////////
 	//Create a simple window
-	int width = 700;
-	int height = 500;
+	int width = 960;
+	int height = 960;
 	unsigned int center = SDL_WINDOWPOS_CENTERED;
 	SDL_Window* Window = SDL_CreateWindow("WS_OpenGL", center, center, width, height, SDL_WINDOW_OPENGL);
 	//SDL_WINDOW_OPENGL is a u32 flag !
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 	/////////SETTING UP OPENGL WITH GLEW///
 	//Initialize glew
 	glewExperimental = GL_TRUE;
-	if (glewInit() == GLEW_OK) 
+	if (glewInit() == GLEW_OK)
 	{
 		cout << "Glew initialized successfully\n";
 	}
@@ -61,11 +61,35 @@ int main(int argc, char* argv[])
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
 	//Describe the shape by its vertices
-
 	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f,
+		 0.0f, 0.0f, 0.0f,		1.0f, 1.0f, 0.0f,
+		 0.0f, 1.2f, 0.0f,		1.0f, 1.0f, 0.0f,
+		 1.0f, 1.0f, 0.0f,		1.0f, 1.0f, 0.0f,
+		 1.2f, 0.0f, 0.0f,		1.0f, 1.0f, 0.0f,
+		 1.0f, -1.0f, 0.0f,		1.0f, 1.0f, 0.0f,
+		 0.0f, -1.2f, 0.0f,		1.0f, 1.0f, 0.0f,
+		 -1.0f, -1.0f, 0.0f,	1.0f, 1.0f, 0.0f,
+		 -1.2f, 0.0f, 0.0f,		1.0f, 1.0f, 0.0f,
+		 -1.0f, 1.0f, 0.0f,		1.0f, 1.0f, 0.0f,
+		 0.0f, 1.2f, 0.0f,		1.0f, 1.0f, 0.0f,
+
+		 -0.6f, 0.7f, 0.0f,		0.0f, 0.0f, 0.0f,
+		 -0.4f, 0.7f, 0.0f,		0.0f, 0.0f, 0.0f,
+		 -0.4f, 0.4f, 0.0f,		0.0f, 0.0f, 0.0f,
+		 -0.6f, 0.4f, 0.0f,		0.0f, 0.0f, 0.0f,
+
+		 0.6f, 0.7f, 0.0f,		0.0f, 0.0f, 0.0f,
+		 0.4f, 0.7f, 0.0f,		0.0f, 0.0f, 0.0f,
+		 0.4f, 0.4f, 0.0f,		0.0f, 0.0f, 0.0f,
+		 0.6f, 0.4f, 0.0f,		0.0f, 0.0f, 0.0f,
+
+		 -0.6f, 2.0f, 0.0f,		0.8f, 0.8f, 0.0f,
+		 0.0f, 1.2f, 0.0f,		0.8f, 0.8f, 0.0f,
+		 -1.0f, 1.0f, 0.0f,		0.8f, 0.8f, 0.0f,
+
+		 0.6f, 2.0f, 0.0f,		0.8f, 0.8f, 0.0f,
+		 0.0f, 1.2f, 0.0f,		0.8f, 0.8f, 0.0f,
+		 1.0f, 1.0f, 0.0f,		0.8f, 0.8f, 0.0f,
 	};
 
 	//Create an ID to be given at object generation
@@ -74,9 +98,9 @@ int main(int argc, char* argv[])
 	//Pass how many buffers should be created and the reference of the ID to get the value set
 	glGenBuffers(1, &vbo);
 
-	string vs = LoadShader("simpleVertex.shader");
+	string vs = LoadShader("moodVertex.shader");
 	const char* vertexShaderSource = vs.c_str();
-	string fs = LoadShader("simpleFragment.shader");
+	string fs = LoadShader("moodFragment.shader");
 	const char* fragmentShaderSource = fs.c_str();
 
 
@@ -119,10 +143,13 @@ int main(int argc, char* argv[])
 	//Finally send the vertices array in the array buffer 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	//How do we split informations of the array
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	//Enable my vertex attrib array number 0 (we only have one attribute of position)
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	// Color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
 
 	//Use depth management
 	glEnable(GL_DEPTH_TEST);
@@ -155,7 +182,30 @@ int main(int argc, char* argv[])
 
 		//OMG WE FINALLY DRAW ! We use the GL_TRIANGLES primitive type
 		//We draw from vertex 0 and we will be drawing 3 vertices
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 18, 6);
+		glDrawArrays(GL_TRIANGLE_FAN, 10, 4);
+		glDrawArrays(GL_TRIANGLE_FAN, 14, 4);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 10);
+		
+		
+
+		// Get the time in seconds 
+		float timeValue = (float)SDL_GetTicks() / 1000;
+		float redColor = (sin(timeValue) / 2.0f) + 0.5f;
+		float blueColor = (sin(timeValue) / 2.0f) + 0.5f;
+		int vertexColorLocation = glGetUniformLocation(shaderProgram, "colorChange");
+		glUseProgram(shaderProgram);
+		glUniform4f(vertexColorLocation, redColor, 0.0f, blueColor, 1.0f);
+
+		float posX = (cos(timeValue) * 8);
+		int vertexPosLocationX = glGetUniformLocation(shaderProgram, "posX");
+		glUseProgram(shaderProgram);
+		glUniform1f(vertexPosLocationX, posX);
+
+		float posY = (sin(timeValue)*8);
+		int vertexPosLocationY = glGetUniformLocation(shaderProgram, "posY");
+		glUseProgram(shaderProgram);
+		glUniform1f(vertexPosLocationY, posY);
 
 		SDL_GL_SwapWindow(Window); // Swapbuffer
 	}

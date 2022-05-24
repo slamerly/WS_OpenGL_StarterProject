@@ -145,6 +145,8 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="moodFragment.shader" />
+    <None Include="moodVertex.shader" />
     <None Include="simpleFragment.shader" />
     <None Include="simpleVertex.shader" />
   </ItemGroup>

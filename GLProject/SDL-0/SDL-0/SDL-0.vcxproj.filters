@@ -22,5 +22,7 @@
   <ItemGroup>
     <None Include="simpleVertex.shader" />
     <None Include="simpleFragment.shader" />
+    <None Include="moodVertex.shader" />
+    <None Include="moodFragment.shader" />
   </ItemGroup>
 </Project>
